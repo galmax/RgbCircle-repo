@@ -14,20 +14,34 @@ import java.util.Dictionary;
 /**
  * Created by Jarvis on 24.04.2016.
  */
-public class CanvasCircle extends View {
+public class CanvasCircle extends View implements ICanvasView {
     private static int width;
     private static int height;
-    GameManager gameManager;
+
+    private Canvas canvas;
+    private GameManager gameManager;
+    private Paint paint;
+
 
 
     public CanvasCircle(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         initWidthAndHeight(context);
+        initPaint();
         gameManager = new GameManager(this, width, height);
+
+    }
+
+    private void initPaint() {
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL);
     }
 
     private void initWidthAndHeight(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        WindowManager windowManager =
+                (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
@@ -38,6 +52,12 @@ public class CanvasCircle extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        gameManager.onDraw(canvas);
+        this.canvas = canvas;
+        gameManager.onDraw();
+    }
+
+    @Override
+    public void drawCircle(MainCircle circle) {
+        canvas.drawCircle(circle.getX(), circle.getY(), circle.getRadius(), paint);
     }
 }
