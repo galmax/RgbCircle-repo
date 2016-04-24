@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -21,8 +22,6 @@ public class CanvasCircle extends View implements ICanvasView {
     private Canvas canvas;
     private GameManager gameManager;
     private Paint paint;
-
-
 
     public CanvasCircle(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -59,5 +58,17 @@ public class CanvasCircle extends View implements ICanvasView {
     @Override
     public void drawCircle(MainCircle circle) {
         canvas.drawCircle(circle.getX(), circle.getY(), circle.getRadius(), paint);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+
+        if(event.getAction() == MotionEvent.ACTION_MOVE){
+            gameManager.onTouchEvent(x, y);
+        }
+        invalidate();
+        return true;
     }
 }
