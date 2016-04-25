@@ -25,12 +25,17 @@ public class GameManager {
     }
 
     private void initEnemyCircles() {
+        SimpleCircle mainCircleArea = mainCircle.getCircleArea();
         circles = new ArrayList<EnemyCircle>();
+
         for (int i = 0; i < MAX_CIRCLES; i++) {
             EnemyCircle enemyCircle;
-            enemyCircle = EnemyCircle.getRandomCircle();
+            do {
+                enemyCircle = EnemyCircle.getRandomCircle();
+            }while (enemyCircle.isIntersect(mainCircleArea));
             circles.add(enemyCircle);
         }
+
         calculateAndSetEnemyColor();
     }
 
