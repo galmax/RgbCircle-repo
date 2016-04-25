@@ -66,7 +66,38 @@ public class GameManager {
 
     public void onTouchEvent(int x, int y) {
         mainCircle.moveMainCircleWhenTouchAt(x, y);
+        checkCollision();
         moveCircles();
+    }
+
+    private void checkCollision() {
+        SimpleCircle circleForDel = null;
+        for (EnemyCircle circle : circles) {
+            if(mainCircle.isIntersect(circle)){
+                if(circle.isSmallerThan(mainCircle)){
+                    mainCircle.growRadius(circle);
+                    circleForDel = circle;
+                    calculateAndSetEnemyColor();
+                    break;
+                }else {
+                    endGame("YOU LOSE!");
+                    return;
+                }
+            }
+        }
+        if(circleForDel != null){
+            circles.remove(circleForDel);
+        }
+        if(circles.isEmpty()){
+            endGame("YOU WIN!");
+        }
+    }
+
+    private void endGame(String text) {
+        canvasCircle.showMessage(text);
+        mainCircle.initRadius();
+        initEnemyCircles();
+        canvasCircle.redraw();
     }
 
     private void moveCircles() {
