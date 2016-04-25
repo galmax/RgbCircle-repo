@@ -3,11 +3,15 @@ package com.example.jarvis.rgbcircle;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.util.ArrayList;
+
 /**
  * Created by Jarvis on 24.04.2016.
  */
 public class GameManager {
+    public static final int MAX_CIRCLES = 10;
     private MainCircle mainCircle;
+    private ArrayList<EnemyCircle> circles;
     private CanvasCircle canvasCircle;
     private static int width;
     private static int height;
@@ -17,6 +21,28 @@ public class GameManager {
         width = w;
         height = h;
         initMainCircle();
+        initEnemyCircles();
+    }
+
+    private void initEnemyCircles() {
+        SimpleCircle mainCircleArea = mainCircle.getCircleArea();
+        circles = new ArrayList<EnemyCircle>();
+
+        for (int i = 0; i < MAX_CIRCLES; i++) {
+            EnemyCircle enemyCircle;
+            do {
+                enemyCircle = EnemyCircle.getRandomCircle();
+            }while (enemyCircle.isIntersect(mainCircleArea));
+            circles.add(enemyCircle);
+        }
+
+        calculateAndSetEnemyColor();
+    }
+
+    private void calculateAndSetEnemyColor() {
+        for (EnemyCircle circle : circles) {
+            circle.setEnemyOrFoodColorDependsOn(mainCircle);
+        }
     }
 
     public static int getWidth() {
@@ -33,6 +59,9 @@ public class GameManager {
 
     public void onDraw() {
         canvasCircle.drawCircle(mainCircle);
+        for (EnemyCircle enemyCircle: circles) {
+            canvasCircle.drawCircle(enemyCircle);
+        }
     }
 
     public void onTouchEvent(int x, int y) {
