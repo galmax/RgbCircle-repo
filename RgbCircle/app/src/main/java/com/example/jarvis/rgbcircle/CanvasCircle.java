@@ -57,6 +57,7 @@ public class CanvasCircle extends View implements ICanvasView {
 
     @Override
     public void drawCircle(SimpleCircle circle) {
+        paint.setColor(circle.getColor());
         canvas.drawCircle(circle.getX(), circle.getY(), circle.getRadius(), paint);
     }
 
